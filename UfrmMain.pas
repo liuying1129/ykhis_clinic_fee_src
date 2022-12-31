@@ -18,22 +18,29 @@ type
   TfrmMain = class(TForm)
     StatusBar1: TStatusBar;
     TimerIdleTracker: TTimer;
-    DBGrid1: TDBGrid;
     DataSource1: TDataSource;
     MyQuery1: TMyQuery;
-    DateTimePicker1: TDateTimePicker;
-    DateTimePicker2: TDateTimePicker;
-    Label1: TLabel;
-    LabeledEdit1: TLabeledEdit;
-    DBGrid2: TDBGrid;
     DataSource2: TDataSource;
     MyQuery2: TMyQuery;
+    Panel3: TPanel;
+    Panel1: TPanel;
+    Label1: TLabel;
+    DateTimePicker1: TDateTimePicker;
+    DateTimePicker2: TDateTimePicker;
+    LabeledEdit1: TLabeledEdit;
+    DBGrid1: TDBGrid;
+    Panel4: TPanel;
+    DBGrid2: TDBGrid;
+    Panel5: TPanel;
+    Panel2: TPanel;
+    Label2: TLabel;
+    Label3: TLabel;
     LabeledEdit2: TLabeledEdit;
     LabeledEdit3: TLabeledEdit;
     LabeledEdit4: TLabeledEdit;
-    Label2: TLabel;
-    Label3: TLabel;
     BitBtn1: TBitBtn;
+    Label4: TLabel;
+    Label5: TLabel;
     procedure FormShow(Sender: TObject);
     procedure TimerIdleTrackerTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -197,30 +204,25 @@ end;
 procedure TfrmMain.UpdateMyQuery2(const tm_unid:integer);
 var
   VirtualTable:TVirtualTable;
-  cc,aa,bb:Extended;
+  cc:Currency;
 begin
-  cc:=0;aa:=0;bb:=0;
+  cc:=0;
   
   MyQuery2.Close;
   MyQuery2.SQL.Clear;
   MyQuery2.SQL.Text:='select ts.item_type,sum(ts.drug_num*ts.unit_price) as 应收,'+
-                     '(select sum(cf.fee) from clinic_fee cf where cf.tm_unid='+inttostr(tm_unid)+' and cf.item_type=ts.item_type) as 已收,'+
-                     'sum(ts.drug_num*ts.unit_price)-(select sum(cf.fee) from clinic_fee cf where cf.tm_unid='+inttostr(tm_unid)+' and cf.item_type=ts.item_type) as 待收'+
+                     '(select sum(cf.fee) from clinic_fee cf where cf.tm_unid='+inttostr(tm_unid)+' and cf.item_type=ts.item_type) as 已收'+
                      ' from treat_slave ts '+
                      'WHERE ts.tm_unid='+inttostr(tm_unid)+
                      ' GROUP BY ts.item_type';
   MyQuery2.Open;
-
   
   VirtualTable:=TVirtualTable.Create(nil);
   VirtualTable.Assign(MyQuery2);//clone数据集
   VirtualTable.Open;
   while not VirtualTable.Eof do
   begin
-    aa:=VirtualTable.fieldbyname('应收').AsFloat;
-    bb:=VirtualTable.fieldbyname('已收').AsFloat;
-    
-    cc:=(aa-bb);
+    cc:=cc+(VirtualTable.fieldbyname('应收').AsFloat-VirtualTable.fieldbyname('已收').AsFloat);
     
     VirtualTable.Next;
   end;
@@ -274,14 +276,17 @@ end;
 procedure TfrmMain.BitBtn1Click(Sender: TObject);
 var
   VirtualTable:TVirtualTable;
-  cc:Double;
+  cc:Currency;
 begin
   VirtualTable:=TVirtualTable.Create(nil);
   VirtualTable.Assign(MyQuery2);//clone数据集
   VirtualTable.Open;
   while not VirtualTable.Eof do
   begin
-    ExecSQLCmd(g_Server,g_Port,g_Database,g_Username,g_Password,'insert into clinic_fee (tm_unid,item_type,operator,fee) values ('+MyQuery1.fieldbyname('unid').AsString+','''+VirtualTable.fieldbyname('item_type').AsString+''','''+operator_name+''','+VirtualTable.fieldbyname('应收').AsString+')');
+    cc:=VirtualTable.fieldbyname('应收').AsFloat-VirtualTable.fieldbyname('已收').AsFloat;
+    if cc<=0 then begin VirtualTable.Next;continue;end;
+
+    ExecSQLCmd(g_Server,g_Port,g_Database,g_Username,g_Password,'insert into clinic_fee (tm_unid,item_type,operator,fee) values ('+MyQuery1.fieldbyname('unid').AsString+','''+VirtualTable.fieldbyname('item_type').AsString+''','''+operator_name+''','+floattostr(cc)+')');
 
     VirtualTable.Next;
   end;

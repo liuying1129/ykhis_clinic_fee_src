@@ -24,6 +24,20 @@ object frmMain: TfrmMain
     Height = 13
     Caption = #26085#26399#33539#22260':'
   end
+  object Label2: TLabel
+    Left = 592
+    Top = 67
+    Width = 7
+    Height = 13
+    Caption = '='
+  end
+  object Label3: TLabel
+    Left = 697
+    Top = 68
+    Width = 7
+    Height = 13
+    Caption = '-'
+  end
   object StatusBar1: TStatusBar
     Left = 0
     Top = 392
@@ -98,8 +112,8 @@ object frmMain: TfrmMain
     Top = 15
     Width = 95
     Height = 21
-    Date = 44923.000682870370000000
-    Time = 44923.000682870370000000
+    Date = 44923.000011574080000000
+    Time = 44923.000011574080000000
     TabOrder = 2
     OnChange = DateTimePicker1Change
   end
@@ -108,8 +122,8 @@ object frmMain: TfrmMain
     Top = 15
     Width = 95
     Height = 21
-    Date = 44923.000011574080000000
-    Time = 44923.000011574080000000
+    Date = 44923.999988425920000000
+    Time = 44923.999988425920000000
     TabOrder = 3
     OnChange = DateTimePicker1Change
   end
@@ -123,12 +137,69 @@ object frmMain: TfrmMain
     EditLabel.Caption = #24739#32773
     LabelPosition = lpLeft
     TabOrder = 4
+    OnKeyDown = LabeledEdit1KeyDown
+  end
+  object DBGrid2: TDBGrid
+    Left = 504
+    Top = 120
+    Width = 337
+    Height = 257
+    DataSource = DataSource2
+    ReadOnly = True
+    TabOrder = 5
+    TitleFont.Charset = ANSI_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -13
+    TitleFont.Name = #23435#20307
+    TitleFont.Style = []
+  end
+  object LabeledEdit2: TLabeledEdit
+    Left = 608
+    Top = 64
+    Width = 81
+    Height = 21
+    EditLabel.Width = 26
+    EditLabel.Height = 13
+    EditLabel.Caption = #23454#25910
+    TabOrder = 6
+    OnChange = LabeledEdit2Change
+  end
+  object LabeledEdit3: TLabeledEdit
+    Left = 712
+    Top = 64
+    Width = 81
+    Height = 21
+    EditLabel.Width = 26
+    EditLabel.Height = 13
+    EditLabel.Caption = #25214#36174
+    Enabled = False
+    TabOrder = 7
+  end
+  object LabeledEdit4: TLabeledEdit
+    Left = 504
+    Top = 64
+    Width = 81
+    Height = 21
+    EditLabel.Width = 26
+    EditLabel.Height = 13
+    EditLabel.Caption = #24212#25910
+    Enabled = False
+    TabOrder = 8
+  end
+  object BitBtn1: TBitBtn
+    Left = 504
+    Top = 8
+    Width = 75
+    Height = 25
+    Caption = #25910#36153
+    TabOrder = 9
+    OnClick = BitBtn1Click
   end
   object TimerIdleTracker: TTimer
     Enabled = False
     Interval = 2000
     OnTimer = TimerIdleTrackerTimer
-    Left = 504
+    Left = 448
     Top = 8
   end
   object DataSource1: TDataSource
@@ -137,7 +208,19 @@ object frmMain: TfrmMain
     Top = 136
   end
   object MyQuery1: TMyQuery
+    AfterOpen = MyQuery1AfterOpen
+    AfterScroll = MyQuery1AfterScroll
     Left = 200
     Top = 136
+  end
+  object DataSource2: TDataSource
+    DataSet = MyQuery2
+    Left = 528
+    Top = 168
+  end
+  object MyQuery2: TMyQuery
+    AfterOpen = MyQuery2AfterOpen
+    Left = 560
+    Top = 168
   end
 end

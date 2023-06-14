@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls,StrUtils, ExtCtrls,IniFiles, DB, MemDS, DBAccess,
-  MyAccess, Grids, DBGrids, StdCtrls,VirtualTable, Buttons;
+  Grids, DBGrids, StdCtrls,VirtualTable, Buttons, Uni;
 
 //==为了通过发送消息更新主窗体状态栏而增加==//
 const
@@ -19,9 +19,9 @@ type
     StatusBar1: TStatusBar;
     TimerIdleTracker: TTimer;
     DataSource1: TDataSource;
-    MyQuery1: TMyQuery;
+    MyQuery1: TUniQuery;
     DataSource2: TDataSource;
-    MyQuery2: TMyQuery;
+    MyQuery2: TUniQuery;
     Panel3: TPanel;
     Panel1: TPanel;
     Label1: TLabel;
@@ -135,7 +135,7 @@ var
   i:integer;
 begin
   //读系统代码
-  SCSYDW:=ScalarSQLCmd(g_Server,g_Port,g_Database,g_Username,g_Password,'select Name from commcode where TypeName=''系统代码'' and ReMark=''授权使用单位'' ');
+  SCSYDW:=ScalarSQLCmd(HisConn,'select Name from commcode where TypeName=''系统代码'' and ReMark=''授权使用单位'' ');
   if SCSYDW='' then SCSYDW:='2F3A054F64394BBBE3D81033FDE12313';//'未授权单位'加密后的字符串
   //======解密SCSYDW
   pInStr:=pchar(SCSYDW);
@@ -286,7 +286,7 @@ begin
     cc:=VirtualTable.fieldbyname('应收').AsFloat-VirtualTable.fieldbyname('已收').AsFloat;
     if cc<=0 then begin VirtualTable.Next;continue;end;
 
-    ExecSQLCmd(g_Server,g_Port,g_Database,g_Username,g_Password,'insert into clinic_fee (tm_unid,item_type,operator,fee) values ('+MyQuery1.fieldbyname('unid').AsString+','''+VirtualTable.fieldbyname('item_type').AsString+''','''+operator_name+''','+floattostr(cc)+')');
+    ExecSQLCmd(HisConn,'insert into clinic_fee (tm_unid,item_type,operator,fee) values ('+MyQuery1.fieldbyname('unid').AsString+','''+VirtualTable.fieldbyname('item_type').AsString+''','''+operator_name+''','+floattostr(cc)+')');
 
     VirtualTable.Next;
   end;

@@ -263,7 +263,7 @@ object frmMain: TfrmMain
     Left = 168
     Top = 136
   end
-  object MyQuery1: TMyQuery
+  object MyQuery1: TUniQuery
     AfterOpen = MyQuery1AfterOpen
     AfterScroll = MyQuery1AfterScroll
     Left = 200
@@ -274,7 +274,7 @@ object frmMain: TfrmMain
     Left = 528
     Top = 168
   end
-  object MyQuery2: TMyQuery
+  object MyQuery2: TUniQuery
     AfterOpen = MyQuery2AfterOpen
     Left = 560
     Top = 168
